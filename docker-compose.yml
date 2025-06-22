@@ -13,6 +13,27 @@ services:
     networks:
       - laravel_network
 
+  scheduler:
+      build:
+          context: .
+          dockerfile: Dockerfile
+      container_name: weather_scheduler
+      restart: unless-stopped
+      working_dir: /var/www
+      volumes:
+          - ./:/var/www
+      networks:
+          - laravel_network
+      command: php artisan schedule:work
+      depends_on:
+          - db
+          - redis
+      healthcheck:
+          test: ["CMD", "ps", "aux", "|", "grep", "artisan"]
+          interval: 30s
+          timeout: 10s
+          retries: 3
+
   nginx:
     image: nginx:alpine
     container_name: weather_nginx
