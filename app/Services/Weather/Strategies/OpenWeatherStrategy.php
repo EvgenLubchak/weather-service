@@ -17,6 +17,7 @@ class OpenWeatherStrategy implements TemperatureProviderInterface
      */
     public function getCurrentTemperatureCelsius(Location $location): TemperatureCelsius
     {
+        //TODO retry, retry in que, que retry for production, log functionality
         try {
             $response = Http::get(config('weather.providers.openweather.api_url'), [
                 'lat' => $location->latitude,
